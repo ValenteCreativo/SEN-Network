@@ -7,9 +7,9 @@ const inter = Inter({ subsets: ["latin"] })
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "SolaData — Decentralized Sensor Data Marketplace",
-  description: "Earn for your sensors. Access trusted public data. Powered by Solana.",
-    generator: 'v0.app'
+  title: "SEN NETWORK - The Sensor Economy on Solana",
+  description: "Earn from your sensors. Access verifiable environmental data. Accelerate open climate intelligence.",
+    generator: 'Next.js'
 }
 
 export default function RootLayout({

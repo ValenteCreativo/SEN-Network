@@ -11,16 +11,16 @@ export default function LandingPage() {
         <div className="container mx-auto flex h-16 items-center justify-between px-4">
           <div className="flex items-center gap-2">
             <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-secondary" />
-            <span className="text-xl font-bold">SolaData</span>
+            <span className="text-xl font-bold">SEN Network</span>
           </div>
           <nav className="hidden items-center gap-6 md:flex">
-            <Link href="/market" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <Link href="/market" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
               Marketplace
             </Link>
-            <Link href="/dashboard" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <Link href="/dashboard" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
               Dashboard
             </Link>
-            <Link href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+            <Link href="/docs" className="text-sm text-muted-foreground transition-colors hover:text-foreground">
               Docs
             </Link>
           </nav>
@@ -35,17 +35,24 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="container mx-auto px-4 py-24 text-center">
-        <div className="mx-auto max-w-4xl space-y-8">
-          <div className="inline-block rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-sm text-primary">
+        <div className="mx-auto max-w-4xl space-y-6">
+          <div className="inline-block rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs tracking-wide uppercase text-primary">
             Powered by Solana
           </div>
+
           <h1 className="text-balance text-5xl font-bold leading-tight tracking-tight md:text-7xl">
-            SolaData — Decentralized Sensor Data Marketplace
+            SEN Network
           </h1>
-          <p className="text-pretty text-xl text-muted-foreground md:text-2xl">
-            Earn for your sensors. Access trusted public data. Powered by Solana.
+
+          <h2 className="text-balance text-2xl font-semibold text-foreground/90 md:text-3xl">
+            The Sensor Economy on Solana
+          </h2>
+
+          <p className="mx-auto max-w-3xl text-pretty text-lg text-muted-foreground md:text-xl">
+            Earn from your sensors. Access verifiable environmental data. Accelerate open climate intelligence.
           </p>
-          <div className="flex flex-col items-center justify-center gap-4 pt-4 sm:flex-row">
+
+          <div className="flex flex-col items-center justify-center gap-4 pt-2 sm:flex-row">
             <Link href="/sensors">
               <DynamicGlowButton variant="primary" className="gap-2 px-8 py-6 text-lg">
                 Become a Sensor Node
@@ -61,7 +68,7 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Holographic decoration */}
+        {/* Metrics */}
         <div className="relative mx-auto mt-16 h-64 w-full max-w-4xl">
           <div className="absolute inset-0 holographic rounded-2xl opacity-50 blur-3xl" />
           <div className="relative flex h-full items-center justify-center">
@@ -91,22 +98,21 @@ export default function LandingPage() {
               <Database className="h-6 w-6 text-primary" />
             </div>
             <h3 className="text-2xl font-bold">Sensor Owners</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              Connect your IoT devices to the network. Stream real-time environmental data and earn passive income for
-              every query served.
+            <p className="leading-relaxed text-muted-foreground">
+              Plug your IoT devices into SEN. Stream real-time environmental data and earn per query served.
             </p>
             <div className="space-y-2 pt-4">
               <div className="flex items-center gap-2 text-sm">
                 <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                <span>Connect device in minutes</span>
+                <span>Connect in minutes</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                <span>Stream data automatically</span>
+                <span>Automatic data streaming</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                <span>Earn SOL for every query</span>
+                <span>Earn SOL per query</span>
               </div>
             </div>
           </GlassCard>
@@ -116,18 +122,17 @@ export default function LandingPage() {
               <Users className="h-6 w-6 text-secondary" />
             </div>
             <h3 className="text-2xl font-bold">Data Buyers</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              Access verified, real-time sensor data from around the world. Pay per query or subscribe monthly for
-              unlimited access.
+            <p className="leading-relaxed text-muted-foreground">
+              Access verified, real-time sensor feeds worldwide. Pay-per-query or subscribe for predictable costs.
             </p>
             <div className="space-y-2 pt-4">
               <div className="flex items-center gap-2 text-sm">
                 <div className="h-1.5 w-1.5 rounded-full bg-secondary" />
-                <span>Query trusted data streams</span>
+                <span>Trusted &amp; verifiable streams</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <div className="h-1.5 w-1.5 rounded-full bg-secondary" />
-                <span>Real-time & historical data</span>
+                <span>Real-time &amp; historical access</span>
               </div>
               <div className="flex items-center gap-2 text-sm">
                 <div className="h-1.5 w-1.5 rounded-full bg-secondary" />
@@ -140,10 +145,9 @@ export default function LandingPage() {
             <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-accent/20">
               <Globe className="h-6 w-6 text-accent" />
             </div>
-            <h3 className="text-2xl font-bold">Public Good</h3>
-            <p className="text-muted-foreground leading-relaxed">
-              Building an open climate intelligence layer. Democratizing access to environmental data for researchers,
-              governments, and communities.
+            <h3 className="text-2xl font-bold">Open Intelligence</h3>
+            <p className="leading-relaxed text-muted-foreground">
+              Building a public climate intelligence layer. Democratizing access for researchers, governments, and communities.
             </p>
             <div className="space-y-2 pt-4">
               <div className="flex items-center gap-2 text-sm">
@@ -165,10 +169,10 @@ export default function LandingPage() {
 
       {/* CTA Section */}
       <section className="container mx-auto px-4 py-24">
-        <GlassCard className="text-center space-y-6 holographic">
+        <GlassCard className="holographic space-y-6 text-center">
           <h2 className="text-4xl font-bold">Ready to get started?</h2>
           <p className="text-xl text-muted-foreground">
-            Join thousands of sensor operators earning passive income on the SolaData network.
+            Join thousands of sensor operators earning passive income on the SEN Network.
           </p>
           <div className="flex flex-col items-center justify-center gap-4 pt-4 sm:flex-row">
             <Link href="/sensors">
@@ -194,25 +198,27 @@ export default function LandingPage() {
             <div className="space-y-4">
               <div className="flex items-center gap-2">
                 <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-secondary" />
-                <span className="text-xl font-bold">SolaData</span>
+                <span className="text-xl font-bold">SEN Network</span>
               </div>
-              <p className="text-sm text-muted-foreground">Decentralized sensor data marketplace powered by Solana.</p>
+              <p className="text-sm text-muted-foreground">
+                The Sensor Economy on Solana — a decentralized marketplace for real-world data.
+              </p>
             </div>
             <div className="space-y-4">
               <h4 className="font-semibold">Product</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
-                  <Link href="/market" className="hover:text-foreground transition-colors">
+                  <Link href="/market" className="transition-colors hover:text-foreground">
                     Marketplace
                   </Link>
                 </li>
                 <li>
-                  <Link href="/dashboard" className="hover:text-foreground transition-colors">
+                  <Link href="/dashboard" className="transition-colors hover:text-foreground">
                     Dashboard
                   </Link>
                 </li>
                 <li>
-                  <Link href="/sensors" className="hover:text-foreground transition-colors">
+                  <Link href="/sensors" className="transition-colors hover:text-foreground">
                     Sensors
                   </Link>
                 </li>
@@ -222,17 +228,17 @@ export default function LandingPage() {
               <h4 className="font-semibold">Resources</h4>
               <ul className="space-y-2 text-sm text-muted-foreground">
                 <li>
-                  <Link href="#" className="hover:text-foreground transition-colors">
+                  <Link href="/docs" className="transition-colors hover:text-foreground">
                     Documentation
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-foreground transition-colors">
+                  <Link href="/docs/api" className="transition-colors hover:text-foreground">
                     API Reference
                   </Link>
                 </li>
                 <li>
-                  <Link href="#" className="hover:text-foreground transition-colors">
+                  <Link href="/faq" className="transition-colors hover:text-foreground">
                     FAQ
                   </Link>
                 </li>
@@ -241,17 +247,25 @@ export default function LandingPage() {
             <div className="space-y-4">
               <h4 className="font-semibold">Community</h4>
               <div className="flex gap-4">
-                <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  href="https://twitter.com"
+                  className="text-muted-foreground transition-colors hover:text-foreground"
+                  aria-label="Twitter"
+                >
                   <Twitter className="h-5 w-5" />
                 </Link>
-                <Link href="#" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  href="https://github.com/ValenteCreativo/SEN-Network"
+                  className="text-muted-foreground transition-colors hover:text-foreground"
+                  aria-label="GitHub"
+                >
                   <Github className="h-5 w-5" />
                 </Link>
               </div>
             </div>
           </div>
           <div className="mt-12 border-t border-border/50 pt-8 text-center text-sm text-muted-foreground">
-            © 2025 SolaData. All rights reserved.
+            © 2025 SEN Network. All rights reserved.
           </div>
         </div>
       </footer>
