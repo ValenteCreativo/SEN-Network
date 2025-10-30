@@ -21,7 +21,7 @@ export function Sidebar() {
         {/* Logo */}
         <div className="flex h-16 items-center gap-2 border-b border-border/50 px-6">
           <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-secondary" />
-          <span className="text-xl font-bold">SolaData</span>
+          <span className="text-xl font-bold">SEN NETWORK</span>
         </div>
 
         {/* Navigation */}

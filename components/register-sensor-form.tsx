@@ -39,7 +39,7 @@ export function RegisterSensorForm({ open, onOpenChange }: RegisterSensorFormPro
         <DialogHeader>
           <DialogTitle className="text-2xl">Register New Sensor</DialogTitle>
           <DialogDescription>
-            Connect your IoT device to the SolaData network and start earning from your data streams.
+            Connect your IoT device to the SEN network and start earning from your data streams.
           </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-6 pt-4">
