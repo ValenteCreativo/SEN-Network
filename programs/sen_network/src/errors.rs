@@ -2,8 +2,11 @@ use anchor_lang::prelude::*;
 
 #[error_code]
 pub enum SenError {
-    #[msg("Sensor ID too long (max 50 characters)")]
+    #[msg("Sensor ID too long (max 32 bytes ASCII)")]
     SensorIdTooLong,
+
+    #[msg("Sensor ID contains invalid characters (ASCII only)")]
+    SensorIdInvalidChars,
 
     #[msg("Sensor type too long (max 20 characters)")]
     SensorTypeTooLong,
@@ -40,4 +43,10 @@ pub enum SenError {
 
     #[msg("Invalid timestamp")]
     InvalidTimestamp,
+
+    #[msg("Invalid token mint: only whitelisted USDC accepted")]
+    InvalidMint,
+
+    #[msg("Reputation update cooldown active (5 minutes between updates)")]
+    ReputationCooldown,
 }

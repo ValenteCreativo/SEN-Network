@@ -1,10 +1,11 @@
 use anchor_lang::prelude::*;
 
 /// Sensor account - stores sensor metadata and configuration
+/// sensor_id: max 32 bytes ASCII for PDA seed compatibility
 #[account]
 pub struct Sensor {
     pub owner: Pubkey,           // Sensor owner wallet
-    pub sensor_id: String,       // Unique sensor identifier (max 50 chars)
+    pub sensor_id: String,       // Unique sensor identifier (max 32 bytes ASCII)
     pub sensor_type: String,     // Sensor type (max 20 chars)
     pub metadata: String,        // JSON metadata (max 200 chars)
     pub treasury: Pubkey,        // Treasury PDA for this sensor
@@ -18,7 +19,7 @@ pub struct Sensor {
 impl Sensor {
     pub const MAX_SIZE: usize = 8 + // discriminator
         32 +    // owner
-        (4 + 50) + // sensor_id
+        (4 + 32) + // sensor_id (max 32 bytes)
         (4 + 20) + // sensor_type
         (4 + 200) + // metadata
         32 +    // treasury
@@ -27,6 +28,8 @@ impl Sensor {
         8 +     // total_readings
         8 +     // created_at
         1;      // bump
+
+    pub const MAX_SENSOR_ID_LEN: usize = 32;
 }
 
 /// Treasury account - holds USDC earnings for a sensor
@@ -104,6 +107,8 @@ pub struct ProgramVault {
     pub authority: Pubkey,       // Vault authority (program upgrade authority)
     pub usdc_mint: Pubkey,       // USDC token mint
     pub total_fees: u64,         // Total fees collected
+    pub treasury_fee_bps: u16,   // Treasury fee in basis points (9500 = 95%)
+    pub vault_fee_bps: u16,      // Vault fee in basis points (500 = 5%)
     pub bump: u8,                // PDA bump seed
 }
 
@@ -112,8 +117,16 @@ impl ProgramVault {
         32 +    // authority
         32 +    // usdc_mint
         8 +     // total_fees
+        2 +     // treasury_fee_bps
+        2 +     // vault_fee_bps
         1;      // bump
+
+    pub const DEFAULT_TREASURY_FEE_BPS: u16 = 9500; // 95%
+    pub const DEFAULT_VAULT_FEE_BPS: u16 = 500;     // 5%
 }
+
+/// Reputation update cooldown (5 minutes)
+pub const REPUTATION_UPDATE_COOLDOWN: i64 = 300;
 
 // PDA seed constants
 pub const SENSOR_SEED: &[u8] = b"sensor";
