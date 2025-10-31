@@ -1,10 +1,13 @@
 import type React from "react";
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
-import { WalletProviderSEN } from "./providers/WalletProvider"; // ← import nombrado (ajusta si usas default)
 
+// CSS globales
 import "./globals.css";
-import "@solana/wallet-adapter-react-ui/styles.css"; // CSS global aquí
+import "@solana/wallet-adapter-react-ui/styles.css";
+
+// Importa el provider tal como lo exportas (nombrado en tu caso)
+import { WalletProviderSEN } from "./providers/WalletProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"] });
@@ -22,7 +25,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark" suppressHydrationWarning>
       <body className={inter.className}>
         <WalletProviderSEN>{children}</WalletProviderSEN>
       </body>
