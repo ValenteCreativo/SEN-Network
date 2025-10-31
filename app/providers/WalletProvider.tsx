@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { ConnectionProvider, WalletProvider } from '@solana/wallet-adapter-react';
-import { WalletAdapterNetwork } from '@solana/wallet-adapter-base';
 import { PhantomWalletAdapter } from '@solana/wallet-adapter-wallets';
 import { WalletModalProvider } from '@solana/wallet-adapter-react-ui';
 import { clusterApiUrl } from '@solana/web3.js';
@@ -10,12 +9,10 @@ import { clusterApiUrl } from '@solana/web3.js';
 type Props = { children: React.ReactNode };
 
 export function WalletProviderSEN({ children }: Props) {
-  // Lee RPC de env o usa devnet por defecto
+  // Lee RPC de env o usa 'devnet' por defecto (sin depender de @solana/wallet-adapter-base)
   const endpoint = useMemo(() => {
     const rpcUrl = process.env.NEXT_PUBLIC_SOLANA_RPC;
-    return rpcUrl && rpcUrl.length > 0
-      ? rpcUrl
-      : clusterApiUrl(WalletAdapterNetwork.Devnet);
+    return rpcUrl && rpcUrl.length > 0 ? rpcUrl : clusterApiUrl('devnet');
   }, []);
 
   // Wallets soportadas
@@ -29,5 +26,3 @@ export function WalletProviderSEN({ children }: Props) {
     </ConnectionProvider>
   );
 }
-
-export default WalletProviderSEN;
