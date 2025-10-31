@@ -1,45 +1,26 @@
 "use client"
 
-import { Wallet } from "lucide-react"
+import { useWallet } from '@solana/wallet-adapter-react'
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { useState } from "react"
+import { ConnectButton } from "@/app/components/ConnectButton"
 
 export function WalletStatusBadge() {
-  const [isConnected, setIsConnected] = useState(false)
-  const [address, setAddress] = useState("")
+  const { publicKey, connected } = useWallet()
 
-  const handleConnect = () => {
-    // Mock wallet connection
-    setIsConnected(true)
-    setAddress("7xKX...9mPq")
+  if (!connected || !publicKey) {
+    return <ConnectButton />
   }
 
-  const handleDisconnect = () => {
-    setIsConnected(false)
-    setAddress("")
-  }
-
-  if (!isConnected) {
-    return (
-      <Button
-        onClick={handleConnect}
-        variant="outline"
-        className="gap-2 border-primary/30 bg-primary/10 text-primary hover:bg-primary/20"
-      >
-        <Wallet className="h-4 w-4" />
-        Connect Wallet
-      </Button>
-    )
-  }
+  const address = publicKey.toBase58()
+  const displayAddress = `${address.slice(0, 4)}…${address.slice(-4)}`
 
   return (
-    <Badge
-      onClick={handleDisconnect}
-      className="cursor-pointer gap-2 bg-primary/20 px-4 py-2 text-primary hover:bg-primary/30"
-    >
-      <div className="h-2 w-2 rounded-full bg-primary pulse-live" />
-      {address}
-    </Badge>
+    <div className="flex items-center gap-3">
+      <Badge className="gap-2 bg-primary/20 px-4 py-2 text-primary hover:bg-primary/30">
+        <div className="h-2 w-2 rounded-full bg-primary pulse-live" />
+        {displayAddress}
+      </Badge>
+      <ConnectButton />
+    </div>
   )
 }

@@ -24,7 +24,7 @@ export default function SensorParticles() {
 
         particles: {
           number: {
-            value: 90,
+            value: 150,
             density: { enable: true }, // sin "area" para evitar choques de tipos
           },
           color: { value: ["#24E1B1", "#4FE5FF"] }, // jade ↔ turquesa

@@ -19,10 +19,10 @@ export function Sidebar() {
     <aside className="fixed left-0 top-0 z-40 h-screen w-64 border-r border-border/50 bg-card/50 backdrop-blur-sm">
       <div className="flex h-full flex-col">
         {/* Logo */}
-        <div className="flex h-16 items-center gap-2 border-b border-border/50 px-6">
+        <Link href="/" className="flex h-16 items-center gap-2 border-b border-border/50 px-6 hover:opacity-80 transition">
           <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-secondary" />
           <span className="text-xl font-bold">SEN NETWORK</span>
-        </div>
+        </Link>
 
         {/* Navigation */}
         <nav className="flex-1 space-y-1 p-4">
