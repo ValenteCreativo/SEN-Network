@@ -60,7 +60,7 @@ A decentralized **Sensor Data Marketplace** where:
 ---
 
 ## 🎯 **Architecture**
-
+```
  ┌──────────────┐      ┌─────────────────────────┐
 │   Sensors    │ ---> │       SEN Backend       │ ----┐
 │ IoT / DIY HW │      │ Fastify + Prisma + Redis│     │
@@ -83,6 +83,8 @@ A decentralized **Sensor Data Marketplace** where:
 │ Real-time UI     │ <────────────────────────> │ Blockchain State│
 │ Subscriptions    │                            │ PDA Accounts    │
 └─────────────────┘                             └─────────────────┘
+```
+---
 
 ### Key Features
 - Sensor registration (on-chain PDA)
@@ -236,7 +238,7 @@ Open browser → `http://localhost:3000`
 ---
 
 ## 📂 **Project Structure**
-
+```
 sen-network/
 ├─ programs/
 │  └─ sen_network/         # Solana smart contract (Anchor)
@@ -252,6 +254,7 @@ sen-network/
    ├─ market/              # Data marketplace UI
    └─ lib/idl/             # IDL imported from Anchor build
 
+```
 
 ---
 
