@@ -3,6 +3,7 @@ import { ArrowRight, Database, Users, Globe, Github, Twitter } from "lucide-reac
 import { DynamicGlowButton } from "@/components/ui/dynamic-glow-button"
 import { GlassCard } from "@/components/ui/glass-card"
 import { ConnectButton } from "./components/ConnectButton"
+import SensorParticles from "@/app/components/visual/SensorParticles"
 
 export default function LandingPage() {
   return (
@@ -38,8 +39,11 @@ export default function LandingPage() {
       </header>
 
       {/* Hero Section */}
-      <section className="container mx-auto px-4 py-24 text-center">
-        <div className="mx-auto max-w-4xl space-y-6">
+      <section className="relative container mx-auto px-4 py-24 text-center overflow-hidden">
+        {/* Partículas en el fondo (mesh reactivo al mouse) */}
+        <SensorParticles />
+
+        <div className="relative z-10 mx-auto max-w-4xl space-y-6">
           <div className="inline-block rounded-full border border-primary/30 bg-primary/10 px-4 py-1.5 text-xs tracking-wide uppercase text-primary">
             Powered by Solana
           </div>
