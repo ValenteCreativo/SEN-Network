@@ -25,3 +25,22 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Anchor / Solana
+.anchor/
+target/
+**/*.rs.bk
+test-ledger/
+.DS_Store
+
+# Backend
+backend/dist/
+backend/node_modules/
+backend/.env
+backend/.env.*
+
+# IDL exports
+app/lib/idl/*.json
+
+# Rust
+Cargo.lock

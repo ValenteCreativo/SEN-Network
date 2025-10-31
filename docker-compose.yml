@@ -1,0 +1,149 @@
+# SEN NETWORK - Sensor Economy Network
+# Docker Compose configuration for local development
+
+version: '3.9'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: sen_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: sen_user
+      POSTGRES_PASSWORD: sen_password
+      POSTGRES_DB: sen_network
+      POSTGRES_INITDB_ARGS: "-E UTF8"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./backend/prisma/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sen_user -d sen_network"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sen_network
+
+  # Redis Cache + Queue Backend
+  redis:
+    image: redis:7-alpine
+    container_name: sen_redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --requirepass sen_redis_password
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sen_network
+
+  # Backend API Server
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: development
+    container_name: sen_backend
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      PORT: 3001
+      DATABASE_URL: postgresql://sen_user:sen_password@postgres:5432/sen_network
+      REDIS_URL: redis://:sen_redis_password@redis:6379
+      LOG_LEVEL: debug
+    ports:
+      - "3001:3001"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+      - ./app/lib/idl:/app/idl_export
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - sen_network
+    command: npm run dev
+
+  # Worker (BullMQ job processor)
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: development
+    container_name: sen_worker
+    restart: unless-stopped
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://sen_user:sen_password@postgres:5432/sen_network
+      REDIS_URL: redis://:sen_redis_password@redis:6379
+      LOG_LEVEL: debug
+      WORKER_CONCURRENCY: 5
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - sen_network
+    command: npm run worker
+
+  # Optional: Redis Commander (GUI for Redis)
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: sen_redis_commander
+    restart: unless-stopped
+    environment:
+      REDIS_HOSTS: local:redis:6379:0:sen_redis_password
+    ports:
+      - "8081:8081"
+    depends_on:
+      - redis
+    networks:
+      - sen_network
+    profiles:
+      - tools
+
+  # Optional: pgAdmin (GUI for PostgreSQL)
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: sen_pgadmin
+    restart: unless-stopped
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@sennetwork.local
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    depends_on:
+      - postgres
+    networks:
+      - sen_network
+    profiles:
+      - tools
+
+networks:
+  sen_network:
+    driver: bridge
+
+volumes:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  pgadmin_data:
+    driver: local

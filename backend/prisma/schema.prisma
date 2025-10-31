@@ -1,0 +1,181 @@
+// SEN NETWORK - Sensor Economy Network
+// Database schema for IoT data marketplace
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// User/Wallet registry
+model User {
+  wallet        String         @id // Solana wallet address
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+
+  sensors       Sensor[]
+  subscriptions Subscription[]
+  reputation    Reputation?
+  payments      Payment[]
+
+  @@index([createdAt])
+}
+
+// Sensor device registry
+model Sensor {
+  id                  String    @id @default(cuid())
+  ownerWallet         String
+  name                String
+  type                String    // "AQI" | "Temperature" | "Noise" | "Traffic" | "Humidity"
+  location            String?   // Rounded for privacy
+  metadata            Json?     // Additional sensor metadata
+  publicKey           String    // Ed25519 public key for signature verification
+  frequency           Int?      // Expected reading interval in seconds
+  status              String    @default("active") // "active" | "offline" | "pending" | "suspended"
+  onChainAddress      String?   // Sensor PDA address on Solana
+  pricePerQuery       Float     @default(0.01) // USDC price per query
+  monthlySubscription Float     @default(5.0)  // USDC monthly subscription price
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
+  lastReadingAt       DateTime?
+
+  owner             User           @relation(fields: [ownerWallet], references: [wallet], onDelete: Cascade)
+  readings          Reading[]
+  archivedReadings  ArchivedReading[]
+  subscriptions     Subscription[]
+  reputation        Reputation?
+  accessGrants      AccessGrant[]
+
+  @@index([ownerWallet])
+  @@index([status])
+  @@index([type])
+  @@index([createdAt])
+  @@index([lastReadingAt])
+}
+
+// Individual sensor readings (active data, <30 days)
+model Reading {
+  id         String   @id @default(cuid())
+  sensorId   String
+  timestamp  DateTime // Sensor-reported timestamp
+  value      Float    // Sensor reading value
+  signature  String   // Ed25519 signature from sensor device
+  hash       String   // SHA256 hash submitted to Solana
+  ipfsHash   String?  // IPFS CID for full data object
+  verified   Boolean  @default(false) // Signature verification status
+  onChainTx  String?  // Solana transaction signature
+  metadata   Json?    // Additional reading metadata
+  createdAt  DateTime @default(now())
+
+  sensor     Sensor   @relation(fields: [sensorId], references: [id], onDelete: Cascade)
+
+  @@index([sensorId, timestamp(sort: Desc)])
+  @@index([verified])
+  @@index([createdAt])
+  @@index([timestamp])
+}
+
+// Archived readings (>30 days old, batch stored in IPFS)
+model ArchivedReading {
+  id          String   @id @default(cuid())
+  sensorId    String
+  startDate   DateTime // Start of archive period
+  endDate     DateTime // End of archive period
+  ipfsCid     String   // IPFS CID containing JSON batch of readings
+  readingCount Int     // Number of readings in batch
+  createdAt   DateTime @default(now())
+
+  sensor      Sensor   @relation(fields: [sensorId], references: [id], onDelete: Cascade)
+
+  @@index([sensorId, startDate])
+  @@index([createdAt])
+}
+
+// Subscription registry
+model Subscription {
+  id          String   @id @default(cuid())
+  sensorId    String
+  buyerWallet String
+  plan        String   // "monthly" | "yearly" | "pay-per-query"
+  active      Boolean  @default(true)
+  onChainAddress String? // Subscription PDA address
+  startedAt   DateTime @default(now())
+  renewAt     DateTime
+  lastPayment DateTime?
+  amount      Float    // USDC amount per renewal
+  autoRenew   Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  sensor      Sensor   @relation(fields: [sensorId], references: [id], onDelete: Cascade)
+  buyer       User     @relation(fields: [buyerWallet], references: [wallet], onDelete: Cascade)
+
+  @@unique([sensorId, buyerWallet])
+  @@index([buyerWallet])
+  @@index([renewAt])
+  @@index([active])
+  @@index([createdAt])
+}
+
+// Payment records (pay-per-query and subscriptions)
+model Payment {
+  id              String   @id @default(cuid())
+  buyerWallet     String
+  sensorId        String?  // Null for subscription payments
+  type            String   // "query" | "subscription"
+  amount          Float    // USDC amount
+  txSignature     String   @unique // Solana transaction signature
+  status          String   @default("pending") // "pending" | "confirmed" | "failed"
+  createdAt       DateTime @default(now())
+  confirmedAt     DateTime?
+
+  buyer           User     @relation(fields: [buyerWallet], references: [wallet], onDelete: Cascade)
+
+  @@index([buyerWallet])
+  @@index([sensorId])
+  @@index([type])
+  @@index([status])
+  @@index([createdAt])
+}
+
+// Reputation scoring
+model Reputation {
+  wallet          String   @id
+  sensorId        String?  @unique // Null for user-level reputation
+  score           Int      @default(0)     // Computed reputation score
+  uptime          Float    @default(0.0)   // Percentage uptime
+  totalReadings   Int      @default(0)     // Total readings submitted
+  verifiedReadings Int     @default(0)     // Successfully verified readings
+  flaggedCount    Int      @default(0)     // Spam/outlier flags
+  onChainAddress  String?  // Reputation PDA address
+  lastCalculated  DateTime @default(now())
+  updatedAt       DateTime @default(now())
+
+  user            User     @relation(fields: [wallet], references: [wallet], onDelete: Cascade)
+  sensor          Sensor?  @relation(fields: [sensorId], references: [id], onDelete: Cascade)
+
+  @@index([score])
+  @@index([uptime])
+  @@index([lastCalculated])
+}
+
+// Access grants (Redis-backed temporary access tokens)
+model AccessGrant {
+  id          String   @id @default(cuid())
+  sensorId    String
+  buyerWallet String
+  grantType   String   // "query" | "subscription"
+  expiresAt   DateTime
+  used        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  sensor      Sensor   @relation(fields: [sensorId], references: [id], onDelete: Cascade)
+
+  @@index([sensorId, buyerWallet])
+  @@index([expiresAt])
+  @@index([used])
+}
