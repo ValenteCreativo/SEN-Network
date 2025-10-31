@@ -7,10 +7,12 @@ import { RevenueChart } from "@/components/dashboard/revenue-chart"
 import { Wallet, Radio, ShoppingCart, TrendingUp } from "lucide-react"
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 export default function DashboardPage() {
   const { publicKey, connected } = useWallet()
   const [walletDisplay, setWalletDisplay] = useState<string>('Not Connected')
+  const router = useRouter()
 
   useEffect(() => {
     if (connected && publicKey) {
@@ -54,6 +56,7 @@ export default function DashboardPage() {
         <DashboardHeader />
         <main className="p-8">
           <div className="space-y-8">
+
             {/* Wallet Info Banner */}
             <div className="glass-card rounded-lg p-4 border border-primary/30">
               <div className="flex items-center gap-3">
@@ -87,15 +90,28 @@ export default function DashboardPage() {
               <div className="glass-card rounded-lg p-6 space-y-4">
                 <h3 className="text-lg font-semibold">Quick Actions</h3>
                 <div className="space-y-2">
-                  <button className="w-full rounded-lg border border-primary/30 bg-primary/10 px-4 py-3 text-left text-sm font-medium text-primary transition-all hover:bg-primary/20">
+
+                  <button
+                    onClick={() => router.push("/sensors/new")}
+                    className="w-full rounded-lg border border-primary/30 bg-primary/10 px-4 py-3 text-left text-sm font-medium text-primary transition-all hover:bg-primary/20"
+                  >
                     Register New Sensor
                   </button>
-                  <button className="w-full rounded-lg border border-border bg-muted/50 px-4 py-3 text-left text-sm font-medium transition-all hover:bg-muted">
+
+                  <button
+                    onClick={() => router.push("/market")}
+                    className="w-full rounded-lg border border-border bg-muted/50 px-4 py-3 text-left text-sm font-medium transition-all hover:bg-muted"
+                  >
                     View Marketplace
                   </button>
-                  <button className="w-full rounded-lg border border-border bg-muted/50 px-4 py-3 text-left text-sm font-medium transition-all hover:bg-muted">
+
+                  <button
+                    onClick={() => router.push("/settings/withdraw")}
+                    className="w-full rounded-lg border border-border bg-muted/50 px-4 py-3 text-left text-sm font-medium transition-all hover:bg-muted"
+                  >
                     Withdraw Earnings
                   </button>
+
                 </div>
               </div>
 
@@ -121,6 +137,7 @@ export default function DashboardPage() {
                 </div>
               </div>
             </div>
+
           </div>
         </main>
       </div>
