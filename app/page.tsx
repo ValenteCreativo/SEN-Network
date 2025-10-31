@@ -2,6 +2,7 @@ import Link from "next/link"
 import { ArrowRight, Database, Users, Globe, Github, Twitter } from "lucide-react"
 import { DynamicGlowButton } from "@/components/ui/dynamic-glow-button"
 import { GlassCard } from "@/components/ui/glass-card"
+import { ConnectButton } from "./components/ConnectButton"
 
 export default function LandingPage() {
   return (
@@ -24,12 +25,15 @@ export default function LandingPage() {
               Docs
             </Link>
           </nav>
-          <Link href="/dashboard">
-            <DynamicGlowButton variant="primary" className="gap-2">
-              Launch App
-              <ArrowRight className="h-4 w-4" />
-            </DynamicGlowButton>
-          </Link>
+          <div className="flex items-center gap-4">
+            <ConnectButton />
+            <Link href="/dashboard">
+              <DynamicGlowButton variant="primary" className="gap-2">
+                Launch App
+                <ArrowRight className="h-4 w-4" />
+              </DynamicGlowButton>
+            </Link>
+          </div>
         </div>
       </header>
 

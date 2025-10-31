@@ -10,6 +10,9 @@ import { Plus, Filter } from "lucide-react"
 import { mockSensors } from "@/lib/mock-data"
 import { Button } from "@/components/ui/button"
 
+// Note: API integration available via app/lib/api.ts
+// Set NEXT_PUBLIC_USE_MOCKS=true in .env.local to use mock data
+
 export default function SensorsPage() {
   const [isRegisterOpen, setIsRegisterOpen] = useState(false)
 
