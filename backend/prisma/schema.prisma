@@ -3,7 +3,6 @@
 
 generator client {
   provider = "prisma-client-js"
-  output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
@@ -19,7 +18,7 @@ model User {
 
   sensors       Sensor[]
   subscriptions Subscription[]
-  reputation    Reputation?
+  userReputation UserReputation?
   payments      Payment[]
 
   @@index([createdAt])
@@ -47,7 +46,7 @@ model Sensor {
   readings          Reading[]
   archivedReadings  ArchivedReading[]
   subscriptions     Subscription[]
-  reputation        Reputation?
+  sensorReputation  SensorReputation?
   accessGrants      AccessGrant[]
 
   @@index([ownerWallet])
@@ -142,21 +141,33 @@ model Payment {
   @@index([createdAt])
 }
 
-// Reputation scoring
-model Reputation {
+// User-level reputation scoring
+model UserReputation {
   wallet          String   @id
-  sensorId        String?  @unique // Null for user-level reputation
   score           Int      @default(0)     // Computed reputation score
-  uptime          Float    @default(0.0)   // Percentage uptime
-  totalReadings   Int      @default(0)     // Total readings submitted
-  verifiedReadings Int     @default(0)     // Successfully verified readings
-  flaggedCount    Int      @default(0)     // Spam/outlier flags
   onChainAddress  String?  // Reputation PDA address
-  lastCalculated  DateTime @default(now())
   updatedAt       DateTime @default(now())
 
   user            User     @relation(fields: [wallet], references: [wallet], onDelete: Cascade)
-  sensor          Sensor?  @relation(fields: [sensorId], references: [id], onDelete: Cascade)
+
+  @@index([score])
+  @@index([updatedAt])
+}
+
+// Sensor-level reputation scoring
+model SensorReputation {
+  id               String   @id @default(cuid())
+  sensorId         String   @unique
+  score            Int      @default(0)     // Computed reputation score
+  uptime           Float    @default(0.0)   // Percentage uptime
+  totalReadings    Int      @default(0)     // Total readings submitted
+  verifiedReadings Int      @default(0)     // Successfully verified readings
+  flaggedCount     Int      @default(0)     // Spam/outlier flags
+  onChainAddress   String?  // Reputation PDA address
+  lastCalculated   DateTime @default(now())
+  updatedAt        DateTime @default(now())
+
+  sensor           Sensor   @relation(fields: [sensorId], references: [id], onDelete: Cascade)
 
   @@index([score])
   @@index([uptime])
