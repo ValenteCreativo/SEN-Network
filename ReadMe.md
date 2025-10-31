@@ -59,19 +59,30 @@ A decentralized **Sensor Data Marketplace** where:
 
 ---
 
- ┌──────────────┐       ┌────────────────────┐
- │  Sensors      │ ---->│  SEN Backend        │----┐
- │  IoT / DIY    │      │  Fastify + Prisma   │    │
- └──────┬────────┘      └───────┬────────────┘    │
-        │                       Workers (BullMQ)   │
-        ▼                                          ▼
-   IPFS Storage       ◄── Blockchain Anchors ◄── Solana Program (Anchor)
-        │                     (hash, payments, reputation)
-        ▼                                          │
- ┌──────────────┐       ┌────────────────────┐     │
- │ Frontend     │<─────▶│ WebSockets + REST  │◄────┘
- │ Next.js      │       └────────────────────┘
- └──────────────┘
+## 🎯 **Architecture**
+
+ ┌──────────────┐      ┌─────────────────────────┐
+│   Sensors    │ ---> │       SEN Backend       │ ----┐
+│ IoT / DIY HW │      │ Fastify + Prisma + Redis│     │
+└──────┬───────┘      └───────┬─────────────────┘     │
+       │                       │                       │
+       │                       │ BullMQ Workers        │
+       │                       ▼                       │
+       │                ┌────────────┐                 │
+       │                │   IPFS     │◄────────────┐   │
+       │                └────────────┘             │   │
+       │                                            ▼   ▼
+       ▼                                        ┌──────────────┐
+┌──────────────┐       Hashes / Payments       │ Solana Program│
+│  Frontend    │ <──────────────────────────── │  (Anchor)     │
+│ Next.js UI   │       Reputation Proofs       └─────┬────────┘
+└──────┬───────┘                                        │
+       │ WebSockets + REST                               │
+       ▼                                                  ▼
+┌─────────────────┐                             ┌─────────────────┐
+│ Real-time UI     │ <────────────────────────> │ Blockchain State│
+│ Subscriptions    │                            │ PDA Accounts    │
+└─────────────────┘                             └─────────────────┘
 
 ### Key Features
 - Sensor registration (on-chain PDA)
@@ -180,8 +191,7 @@ Build:
 
 anchor build
 
-makefile
-Copiar código
+
 
 Deploy:
 
@@ -211,16 +221,14 @@ Backend:
 
 pnpm dev:server
 
-makefile
-Copiar código
+
 
 Frontend:
 
 cd app
 pnpm dev
 
-yaml
-Copiar código
+
 
 Open browser → `http://localhost:3000`
 
@@ -230,14 +238,19 @@ Open browser → `http://localhost:3000`
 ## 📂 **Project Structure**
 
 sen-network/
-├─ programs/sen_network/ # Solana smart contract
-├─ backend/
-│ ├─ src/
-│ │ ├─ server.ts # Fastify API
-│ │ ├─ workers/ # BullMQ jobs
-│ │ └─ prisma/ # Database schema
-└─ app/ # Next.js Marketplace UI
-
+├─ programs/
+│  └─ sen_network/         # Solana smart contract (Anchor)
+│     └─ src/
+│        └─ lib.rs
+├─ backend/                # Fastify API + Prisma ORM + Redis queues
+│  └─ src/
+│     ├─ server.ts         # API entrypoint
+│     ├─ workers/          # BullMQ job processors
+│     └─ prisma/           # Database schema & migrations
+└─ app/                    # Next.js Marketplace UI
+   ├─ sensors/             # Sensor management UI
+   ├─ market/              # Data marketplace UI
+   └─ lib/idl/             # IDL imported from Anchor build
 
 
 ---
@@ -293,9 +306,9 @@ Docker errors | `docker compose down && docker compose up` |
 ## 🐾 **Author**
 
 **Valentín Martínez**  
-Builder — Solana | DePIN | AI | Cyberpunk Panther 🐆⚡️  
+Builder — PhD Candidate on Technological Innovation | COO Frutero Club | Cyberpunk Panther 🐆⚡️  
 
-github.com/valentinmartinez
+https://github.com/ValenteCreativo
 
 ```bash
 
