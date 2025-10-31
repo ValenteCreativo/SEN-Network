@@ -59,18 +59,19 @@ A decentralized **Sensor Data Marketplace** where:
 
 ---
 
-## 🧠 **Architecture**
-
-Sensors → Backend Ingest → IPFS + Solana Hash Commit
-↓
-Reputation + Billing Engine
-↓
-API + WebSocket Query Layer
-↓
-Frontend Marketplace UI
-
-markdown
-Copiar código
+ ┌──────────────┐       ┌────────────────────┐
+ │  Sensors      │ ---->│  SEN Backend        │----┐
+ │  IoT / DIY    │      │  Fastify + Prisma   │    │
+ └──────┬────────┘      └───────┬────────────┘    │
+        │                       Workers (BullMQ)   │
+        ▼                                          ▼
+   IPFS Storage       ◄── Blockchain Anchors ◄── Solana Program (Anchor)
+        │                     (hash, payments, reputation)
+        ▼                                          │
+ ┌──────────────┐       ┌────────────────────┐     │
+ │ Frontend     │<─────▶│ WebSockets + REST  │◄────┘
+ │ Next.js      │       └────────────────────┘
+ └──────────────┘
 
 ### Key Features
 - Sensor registration (on-chain PDA)
@@ -137,8 +138,7 @@ docker + docker compose
 solana-cli >= 2.x (Agave stack)
 anchor-cli >= 0.30.1
 
-arduino
-Copiar código
+```bash
 
 Verify setup:
 
@@ -146,10 +146,11 @@ solana --version
 anchor --version
 docker --version
 
-yaml
-Copiar código
+```
 
 ---
+
+```bash
 
 ## ⚙️ **Install & Setup**
 
@@ -160,20 +161,20 @@ cd sen-network
 pnpm install
 docker compose up -d
 
-javascript
-Copiar código
+```
+```bash
 
 Set devnet:
 
 solana config set --url https://api.devnet.solana.com
 solana airdrop 2
 
-yaml
-Copiar código
-
+```
 ---
 
 ## 🧱 **Anchor Program Deployment**
+
+```bash
 
 Build:
 
@@ -186,23 +187,24 @@ Deploy:
 
 anchor deploy
 
-css
-Copiar código
+
 
 Copy IDL to frontend:
 
 cp target/idl/sen_network.json app/lib/idl/
 
-yaml
-Copiar código
+
 
 Update program ID in:
 
 - `Anchor.toml`
 - `app/lib/idl/sen_network.json`
 
+```
+
 ---
 
+```bash
 ## 💻 **Local Development**
 
 Backend:
@@ -222,6 +224,7 @@ Copiar código
 
 Open browser → `http://localhost:3000`
 
+```
 ---
 
 ## 📂 **Project Structure**
@@ -235,12 +238,13 @@ sen-network/
 │ │ └─ prisma/ # Database schema
 └─ app/ # Next.js Marketplace UI
 
-yaml
-Copiar código
+
 
 ---
 
 ## 🧪 **Useful Commands**
+
+```bash
 
 solana-test-validator # local chain
 solana-keygen new # new wallet
@@ -248,9 +252,7 @@ anchor build --idl # rebuild IDL
 cp target/idl/*.json app/lib/idl/ # sync IDL to UI
 docker compose restart # infra reset
 
-yaml
-Copiar código
-
+```
 ---
 
 ## 🩹 **Troubleshooting**
@@ -295,7 +297,8 @@ Builder — Solana | DePIN | AI | Cyberpunk Panther 🐆⚡️
 
 github.com/valentinmartinez
 
-bash
-Copiar código
+```bash
 
-MIT License — **Open source for planetary intelligence & resilience 🌍**
+MIT License — **Open source for planetary intelligence & resilience 🌍**s
+
+```
